@@ -223,9 +223,363 @@ void Sudoku::Solve()
    for(k=0;k<9;k++)
     check[k]=0;
   }
+ int count=0,position[12][12];
+ for(i=0;i<12;i++)
+  for(j=0;j<12;j++)
+   position[i][j]=0;
+ for(i=0;i<12;i++)
+  for(j=0;j<12;j++)
+   if(sudoku[i][j]==0)
+   {
+    count++;
+    position[i][j]++;
+   }
+ int b=0,c=0,only=0,control=1;
+ while(control==1)
+ {
+  control=0;
+  for(i=0;i<12;i++)
+   for(j=0;j<12;j++)
+   {
+    if(position[i][j]==1)//在空格上
+    {
+     //橫只有一個可能
+     for(b=i,c=0;c<12;c++)
+      if(sudoku[b][c]==0)
+       only++;
+     if(only==1)
+     {
+      for(b=i,c=0;c<12;c++)
+       if(sudoku[b][c]!=-1&&sudoku[b][c]!=0)
+        check[sudoku[b][c]-1]++;
+      for(k=0;k<9;k++)
+       if(check[k]==0)
+        break;
+      sudoku[i][j]=k+1;
+      position[i][j]=0;
+      control=1;
+      continue;
+     }
+     //直只有一個可能 
+     only=0;
+     for(k=0;k<9;k++)
+      check[k]=0;
+     for(b=0,c=j;b<12;b++)
+      if(sudoku[b][c]==0)
+       only++;
+     if(only==1)
+     {
+      for(b=0,c=j;b<12;b++)
+       if(sudoku[b][c]!=-1&&sudoku[b][c]!=0)
+        check[sudoku[b][c]-1]++;
+      for(k=0;k<9;k++)
+       if(check[k]==0)
+        break;
+      sudoku[i][j]=k+1;
+      position[i][j]=0;
+      control=1;
+      continue;
+     }
+     //九宮格只有一個可能
+     only=0;
+     for(k=0;k<9;k++)
+      check[k]=0;
+     switch((i%3)*10+j%3)
+     {
+      case 0:for(b=i;b<i+3;b++)
+              for(c=j;c<j+3;c++)
+               if(sudoku[b][c]==0)
+                only++;
+             if(only==1)
+             {
+              for(b=i;b<i+3;b++)
+               for(c=j;c<j+3;c++)
+                if(sudoku[b][c]!=-1&&sudoku[b][c]!=0)
+                 check[sudoku[b][c]-1]++;
+              for(k=0;k<9;k++)
+               if(check[k]==0)
+                break;
+              sudoku[i][j]=k+1;
+              position[i][j]=0;
+              control=1;
+             }
+             break;
+      case 1:for(b=i;b<i+3;b++)
+              for(c=j-1;c<j+2;c++)
+               if(sudoku[b][c]==0)
+                only++;
+             if(only==1)
+             {
+              for(b=i;b<i+3;b++)
+               for(c=j-1;c<j+2;c++)
+                if(sudoku[b][c]!=-1&&sudoku[b][c]!=0)
+                 check[sudoku[b][c]-1]++;
+              for(k=0;k<9;k++)
+               if(check[k]==0)
+                break;
+              sudoku[i][j]=k+1;
+              position[i][j]=0;
+              control=1;
+             }
+             break;
+      case 2:for(b=i;b<i+3;b++)
+              for(c=j-2;c<j+1;c++)
+               if(sudoku[b][c]==0)
+                only++;
+             if(only==1)
+             {
+              for(b=i;b<i+3;b++)
+               for(c=j-2;c<j+1;c++)
+                if(sudoku[b][c]!=-1&&sudoku[b][c]!=0)
+                 check[sudoku[b][c]-1]++;
+              for(k=0;k<9;k++)
+               if(check[k]==0)
+                break;
+              sudoku[i][j]=k+1;
+              position[i][j]=0;
+              control=1;
+             }
+             break;
+      case 10:for(b=i-1;b<i+2;b++)
+               for(c=j;c<j+3;c++)
+                if(sudoku[b][c]==0)
+                 only++;
+              if(only==1)
+              {
+               for(b=i-1;b<i+2;b++)
+                for(c=j;c<j+3;c++)
+                 if(sudoku[b][c]!=-1&&sudoku[b][c]!=0)
+                  check[sudoku[b][c]-1]++;
+               for(k=0;k<9;k++)
+                if(check[k]==0)
+                 break;
+               sudoku[i][j]=k+1;
+               position[i][j]=0;
+               control=1;
+              }
+              break;
+      case 11:for(b=i-1;b<i+2;b++)
+               for(c=j-1;c<j+2;c++)
+                if(sudoku[b][c]==0)
+                 only++;
+              if(only==1)
+              {
+               for(b=i-1;b<i+2;b++)
+                for(c=j-1;c<j+2;c++)
+                 if(sudoku[b][c]!=-1&&sudoku[b][c]!=0)
+                  check[sudoku[b][c]-1]++;
+               for(k=0;k<9;k++)
+                if(check[k]==0)
+                 break;
+               sudoku[i][j]=k+1;
+               position[i][j]=0;
+               control=1;
+              }
+              break;
+      case 12:for(b=i-1;b<i+2;b++)
+               for(c=j-2;c<j+1;c++)
+                if(sudoku[b][c]==0)
+                 only++;
+              if(only==1)
+              {
+               for(b=i-1;b<i+2;b++)
+                for(c=j-2;c<j+1;c++)
+                 if(sudoku[b][c]!=-1&&sudoku[b][c]!=0)
+                  check[sudoku[b][c]-1]++;
+               for(k=0;k<9;k++)
+                if(check[k]==0)
+                 break;
+               sudoku[i][j]=k+1;
+               position[i][j]=0;
+               control=1;
+              }
+              break;
+      case 20:for(b=i-2;b<i+1;b++)
+               for(c=j;c<j+3;c++)
+                if(sudoku[b][c]==0)
+                 only++;
+              if(only==1)
+              {
+               for(b=i-2;b<i+1;b++)
+                for(c=j;c<j+3;c++)
+                 if(sudoku[b][c]!=-1&&sudoku[b][c]!=0)
+                  check[sudoku[b][c]-1]++;
+               for(k=0;k<9;k++)
+                if(check[k]==0)
+                 break;
+               sudoku[i][j]=k+1;
+               position[i][j]=0;
+               control=1;
+              }
+              break;
+      case 21:for(b=i-2;b<i+1;b++)
+               for(c=j-1;c<j+2;c++)
+                if(sudoku[b][c]==0)
+                 only++;
+              if(only==1)
+              {
+               for(b=i-2;b<i+1;b++)
+                for(c=j-1;c<j+2;c++)
+                 if(sudoku[b][c]!=-1&&sudoku[b][c]!=0)
+                  check[sudoku[b][c]-1]++;
+               for(k=0;k<9;k++)
+                if(check[k]==0)
+                 break;
+               sudoku[i][j]=k+1;
+               position[i][j]=0;
+               control=1;
+              }
+              break;
+      default:for(b=i-2;b<i+1;b++)
+               for(c=j-2;c<j+1;c++)
+                 if(sudoku[b][c]==0)
+                 only++;
+              if(only==1)
+              {
+               for(b=i-2;b<i+1;b++)
+                for(c=j-2;c<j+1;c++)
+                 if(sudoku[b][c]!=-1&&sudoku[b][c]!=0)
+                  check[sudoku[b][c]-1]++;
+               for(k=0;k<9;k++)
+                if(check[k]==0)
+                 break;
+               sudoku[i][j]=k+1;
+               position[i][j]=0;
+               control=1;
+               }
+              break;
+     } 
+     only=0;
+     for(k=0;k<9;k++)
+      check[k]=0;
+    }
+    else;
+   }
+ }
+ only=0;
+ for(k=0;k<9;k++)
+  check[k]=0;
+
+
+
+/*
+ cout<<"\n"<<endl;
+ for(i=0;i<12;i++)
+ {
+  for(j=0;j<12;j++)
+  {
+   if(sudoku[i][j]==-1)
+    cout<<sudoku[i][j]<<" ";
+   else
+    cout<<" "<<sudoku[i][j]<<" ";
+  }
+  cout<<endl;
+ } 
+*/
+
+
+
+
+
+
+
+
+
+
+
+ 
+ int clear=1;
+ for(i=0;i<12;i++)
+  for(j=0;j<12;j++)
+   if(sudoku[i][j]==0)
+    clear=0;
+ if(clear==1)
+ {
+  for(i=0;i<12;i++)
+  {
+   for(j=0;j<12;j++)
+   {
+    if(sudoku[i][j]==-1);
+    else
+    {
+     if(check[sudoku[i][j]-1]==1)
+      result=0;
+     else;
+     check[sudoku[i][j]-1]++;
+    }
+   }
+   for(j=0;j<9;j++)
+    check[j]=0;
+  }
+  for(i=0;i<12;i++)
+  {
+   for(j=0;j<12;j++)
+   {
+    if(sudoku[j][i]==-1);
+    else
+    {
+     if(check[sudoku[j][i]-1]==1)
+      result=0;
+     else;
+     check[sudoku[j][i]-1]++;
+    }
+   }
+   for(j=0;j<9;j++)
+    check[j]=0;
+  }
+  for(i=0;i<4;i++)
+   for(j=0;j<4;j++)
+   {
+    temp1=3*i;
+    temp2=3*j;
+    for(k=0;k<9;k++)
+    {
+     if(sudoku[temp1][temp2]!=-1)
+     {
+      if(check[sudoku[temp1][temp2]-1]>=1)
+       result=0;
+      else;
+      check[sudoku[temp1][temp2]-1]++;
+     }
+     else;
+     temp2++;
+     if(temp2%3==0)
+     {
+      temp1+=1;
+      temp2=3*j;
+     }
+     else;
+    }
+    for(k=0;k<9;k++)
+     check[k]=0;
+   }
+  if(result==-1)
+  {
+   cout<<"1"<<endl;//全部剛好能一次解決的沒有不確定答案加上沒有不符合規定
+   for(i=0;i<12;i++)
+   {
+    for(j=0;j<12;j++)
+    {
+     if(sudoku[i][j]==-1)
+      cout<<sudoku[i][j]<<" ";
+     else
+      cout<<" "<<sudoku[i][j]<<" ";
+    }
+    cout<<endl;
+   } 
+   return;
+  }
+  else
+  {
+   cout<<"0"<<endl;//全部剛好能一次解決但不符合規定
+   return;
+  }
+ }
+   
+
  if(result==0)
  {
   cout<<result<<endl;
   return;
- }
+ } 
 }
