@@ -11,7 +11,7 @@ void Sudoku::GiveQuestion()
                        {-1,-1,-1, 6, 2, 4, 3, 9, 7, 8, 5, 1},
                        {-1,-1,-1, 5, 7, 3, 1, 6, 8, 4, 9, 2},
                        { 5, 6, 8, 2, 4, 1,-1,-1,-1, 9, 3, 7},
-                       { 3, 4, 7, 9, 3, 5,-1,-1,-1, 1, 8, 6},
+                       { 2, 4, 7, 9, 3, 5,-1,-1,-1, 1, 8, 6},
                        { 1, 3, 9, 8, 6, 7,-1,-1,-1, 5, 2, 4},
                        { 8, 1, 6,-1,-1,-1, 2, 7, 5, 3, 4, 9},
                        { 3, 9, 5,-1,-1,-1, 4, 1, 6, 2, 7, 8},
@@ -120,4 +120,69 @@ void Sudoku::GiveQuestion()
   }
   cout<<endl;
  } 
+}
+
+void Sudoku::ReadIn()
+{
+ int i,j;
+ for(i=0;i<12;i++)
+  for(j=0;j<12;j++)
+   cin>>sudoku[i][j];
+ for(i=0;i<12;i++)
+ {
+  for(j=0;j<12;j++)
+  {
+   if(sudoku[i][j]==-1)
+    cout<<sudoku[i][j]<<" ";
+   else
+    cout<<" "<<sudoku[i][j]<<" ";
+  }
+  cout<<endl;
+ } 
+}
+
+void Sudoku::Solve()
+{
+ int result=-1,i,j,total=0,pass=0,check[9]={0};
+ for(i=0;i<12;i++)
+  for(j=0;j<12;j++)
+  {
+   if(sudoku[i][j]==-1)
+   {
+    total++;
+    if(pass==0)
+     if(sudoku[i][j+1]!=-1||sudoku[i][j+2]!=-1||sudoku[i+1][j]!=-1||sudoku[i+1][j+1]!=-1||sudoku[i+1][j+2]!=-1||sudoku[i+2][j]!=-1||sudoku[i+2][j+1]!=-1||sudoku[i+2][j+2]!=-1)
+      result=0;
+     else;
+    else;
+    pass=1;
+    if(total%9==0)
+     pass=0;
+    else;
+   }
+  }
+ if(total!=36)
+  result=0;
+ else;
+ for(i=0;i<12;i++)
+ {
+  for(j=0;j<12;j++)
+  {
+   if(sudoku[i][j]==-1||sudoku[i][j]==0);
+   else
+   {
+    if(check[sudoku[i][j]-1]==1)
+     result=0;
+    else;
+    check[sudoku[i][j]-1]++;
+   }
+  }
+  for(j=0;j<9;j++)
+   check[j]=0;
+ }
+ if(result==0)
+ {
+  cout<<result<<endl;
+  return;
+ }
 }
