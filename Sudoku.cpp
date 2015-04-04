@@ -143,7 +143,7 @@ void Sudoku::ReadIn()
 
 void Sudoku::Solve()
 {
- int result=-1,i,j,total=0,pass=0,check[9]={0};
+ int result=-1,i,j,k,total=0,pass=0,check[9]={0};
  for(i=0;i<12;i++)
   for(j=0;j<12;j++)
   {
@@ -180,6 +180,49 @@ void Sudoku::Solve()
   for(j=0;j<9;j++)
    check[j]=0;
  }
+ for(i=0;i<12;i++)
+ {
+  for(j=0;j<12;j++)
+  {
+   if(sudoku[j][i]==-1||sudoku[j][i]==0);
+   else
+   {
+    if(check[sudoku[j][i]-1]==1)
+     result=0;
+    else;
+    check[sudoku[j][i]-1]++;
+   }
+  }
+  for(j=0;j<9;j++)
+   check[j]=0;
+ }
+ int temp1,temp2;
+ for(i=0;i<4;i++)
+  for(j=0;j<4;j++)
+  {
+   temp1=3*i;
+   temp2=3*j;
+   for(k=0;k<9;k++)
+   {
+    if(sudoku[temp1][temp2]!=-1&&sudoku[temp1][temp2]!=0)
+    {
+     if(check[sudoku[temp1][temp2]-1]>=1)
+      result=0;
+     else;
+     check[sudoku[temp1][temp2]-1]++;
+    }
+    else;
+    temp2++;
+    if(temp2%3==0)
+    {
+     temp1+=1;
+     temp2=3*j;
+    }
+    else;
+   }
+   for(k=0;k<9;k++)
+    check[k]=0;
+  }
  if(result==0)
  {
   cout<<result<<endl;
