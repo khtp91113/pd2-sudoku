@@ -140,30 +140,9 @@ void Sudoku::ReadIn()
   cout<<endl;
  } 
 }
-
-void Sudoku::Solve()
+int Sudoku::correct(int result)
 {
- int result=-1,i,j,k,total=0,pass=0,check[9]={0};
- for(i=0;i<12;i++)
-  for(j=0;j<12;j++)
-  {
-   if(sudoku[i][j]==-1)
-   {
-    total++;
-    if(pass==0)
-     if(sudoku[i][j+1]!=-1||sudoku[i][j+2]!=-1||sudoku[i+1][j]!=-1||sudoku[i+1][j+1]!=-1||sudoku[i+1][j+2]!=-1||sudoku[i+2][j]!=-1||sudoku[i+2][j+1]!=-1||sudoku[i+2][j+2]!=-1)
-      result=0;
-     else;
-    else;
-    pass=1;
-    if(total%9==0)
-     pass=0;
-    else;
-   }
-  }
- if(total!=36)
-  result=0;
- else;
+ int i,j,k,check[9]={0};
  for(i=0;i<12;i++)
  {
   for(j=0;j<12;j++)
@@ -223,7 +202,92 @@ void Sudoku::Solve()
    for(k=0;k<9;k++)
     check[k]=0;
   }
- int count=0,position[12][12];
+  return result;
+}
+
+int Sudoku::Multiple(int possible[][9],int count,int m[],int n[],int result)
+{
+ int x[count],time=0;
+ unsigned long long int temp=1,i,j,k,y=1;
+ for(i=0;i<count;i++)
+  x[i]=0;
+ for(i=0;i<count;i++)
+  for(j=0;j<9&&possible[i][j]!=0;j++)
+   x[i]++;
+ for(i=0;i<count;i++)//////////////y被玩報了...
+  y*=x[i];
+ int total[count],echelon[count];
+ for(i=0;i<count-1;i++)///////////echelon也被玩爆了...
+ {
+  for(j=count-1;j>i;j--)
+   temp*=x[j];
+  echelon[i]=temp;
+  temp=1;
+ }
+ echelon[count-1]=x[count-1];
+ int temp1,temp2;
+ for(i=0;i<y;i++)
+ {
+  temp=i;
+  for(j=0;j<count-1;j++)
+  {
+   total[j]=temp/echelon[j];
+   temp-=total[j]*echelon[j];
+  }
+  total[count-1]=temp;
+  for(j=0;j<count;j++)
+   sudoku[m[j]][n[j]]=possible[j][total[j]];
+  temp2=correct(result);
+  if(temp2==-1&&time==1)
+   return 2;
+  if(temp2==-1)
+  {
+   time=1;
+   temp1=y;
+  }
+ }
+ if(time==1)
+ {
+  temp=temp1;
+  for(j=0;j<count-1;j++)
+  {
+   total[j]=temp/echelon[j];
+   temp-=total[j]*echelon[j];
+  }
+  total[count-1]=temp;
+  for(j=0;j<count;j++)
+   sudoku[m[j]][n[j]]=possible[j][total[j]];
+  return 1;
+ }
+ if(time==0)
+  return 0;
+}
+
+void Sudoku::Solve()
+{
+ int result=-1,i,j,k,total=0,pass=0,check[9]={0};
+ for(i=0;i<12;i++)
+  for(j=0;j<12;j++)
+  {
+   if(sudoku[i][j]==-1)
+   {
+    total++;
+    if(pass==0)
+     if(sudoku[i][j+1]!=-1||sudoku[i][j+2]!=-1||sudoku[i+1][j]!=-1||sudoku[i+1][j+1]!=-1||sudoku[i+1][j+2]!=-1||sudoku[i+2][j]!=-1||sudoku[i+2][j+1]!=-1||sudoku[i+2][j+2]!=-1)
+      result=0;
+     else;
+    else;
+    pass=1;
+    if(total%9==0)
+     pass=0;
+    else;
+   }
+  }
+ if(total!=36)
+  result=0;
+ else;
+ result=correct(result);
+ int count=0;
  for(i=0;i<12;i++)
   for(j=0;j<12;j++)
    position[i][j]=0;
@@ -472,65 +536,7 @@ void Sudoku::Solve()
     clear=0;
  if(clear==1)
  {
-  for(i=0;i<12;i++)
-  {
-   for(j=0;j<12;j++)
-   {
-    if(sudoku[i][j]==-1||sudoku[i][j]==0);
-    else
-    {
-     if(check[sudoku[i][j]-1]==1)
-      result=0;
-     else;
-     check[sudoku[i][j]-1]++;
-    }
-   }
-   for(j=0;j<9;j++)
-    check[j]=0;
-  }
-  for(i=0;i<12;i++)
-  {
-   for(j=0;j<12;j++)
-   {
-    if(sudoku[j][i]==-1||sudoku[j][i]==0);
-    else
-    {
-     if(check[sudoku[j][i]-1]==1)
-       result=0;
-     else;
-     check[sudoku[j][i]-1]++;
-    }
-   }
-   for(j=0;j<9;j++)
-     check[j]=0;
-  }
-
-  for(i=0;i<4;i++)
-   for(j=0;j<4;j++)
-   {
-    temp1=3*i;
-    temp2=3*j;
-    for(k=0;k<9;k++)
-    {
-     if(sudoku[temp1][temp2]!=-1&&sudoku[temp1][temp2]!=0)
-     {
-      if(check[sudoku[temp1][temp2]-1]>=1)
-       result=0;
-      else;
-      check[sudoku[temp1][temp2]-1]++;
-     }
-     else;
-     temp2++;
-     if(temp2%3==0)
-     {
-      temp1+=1;
-      temp2=3*j;
-     }
-     else;
-    }
-    for(k=0;k<9;k++)
-     check[k]=0;
-   }
+  result=correct(result);
   if(result==-1)
   {
    cout<<"1"<<endl;//全部剛好能一次解決的沒有不確定答案加上沒有不符合規定
@@ -574,6 +580,11 @@ void Sudoku::Solve()
  while(control==1)
  {
   control=0;
+  count=0;
+  for(i=0;i<12;i++)
+   for(j=0;j<12;j++)
+    if(sudoku[i][j]==0)
+     count++;
   for(i=0;i<12;i++)
   {
    for(j=0;j<12;j++)
@@ -681,65 +692,7 @@ void Sudoku::Solve()
     clear=0;
  if(clear==1)
  {
-  for(i=0;i<12;i++)
-  {
-   for(j=0;j<12;j++)
-   {
-    if(sudoku[i][j]==-1||sudoku[i][j]==0);
-    else
-    {
-     if(check[sudoku[i][j]-1]==1)
-      result=0;
-     else;
-     check[sudoku[i][j]-1]++;
-    }
-   }
-   for(j=0;j<9;j++)
-    check[j]=0;
-  }
-  for(i=0;i<12;i++)
-  {
-   for(j=0;j<12;j++)
-   {
-    if(sudoku[j][i]==-1||sudoku[j][i]==0);
-    else
-    {
-     if(check[sudoku[j][i]-1]==1)
-       result=0;
-     else;
-     check[sudoku[j][i]-1]++;
-    }
-   }
-   for(j=0;j<9;j++)
-     check[j]=0;
-  }
-
-  for(i=0;i<4;i++)
-   for(j=0;j<4;j++)
-   {
-    temp1=3*i;
-    temp2=3*j;
-    for(k=0;k<9;k++)
-    {
-     if(sudoku[temp1][temp2]!=-1&&sudoku[temp1][temp2]!=0)
-     {
-      if(check[sudoku[temp1][temp2]-1]>=1)
-       result=0;
-      else;
-      check[sudoku[temp1][temp2]-1]++;
-     }
-     else;
-     temp2++;
-     if(temp2%3==0)
-     {
-      temp1+=1;
-      temp2=3*j;
-     }
-     else;
-    }
-    for(k=0;k<9;k++)
-     check[k]=0;
-   }
+  result=correct(result);
   if(result==-1)
   {
    cout<<"1"<<endl;//全部剛好能一次解決的沒有不確定答案加上沒有不符合規定
@@ -762,32 +715,50 @@ void Sudoku::Solve()
    return;
   }
  }
-
- 
-
-
-
-
-
-
- cout<<"\n"<<endl;
+ k=0;
+ int m[count1],n[count1];
  for(i=0;i<12;i++)
- {
   for(j=0;j<12;j++)
   {
-   if(sudoku[i][j]==-1)
-    cout<<sudoku[i][j]<<" ";
-   else
-    cout<<" "<<sudoku[i][j]<<" ";
+   if(position[i][j]==1)
+   {
+    m[k]=i;
+    n[k]=j;
+    k++;
+   }
   }
-  cout<<endl;
+
+
+
+
+
+ result=Multiple(possible,count1,m,n,result);
+     
+
+ if(result==2)
+ {
+  cout<<result<<endl;
+  return;
+ }
+
+
+ if(result==1)
+ {
+  cout<<result<<endl;
+  for(i=0;i<12;i++)
+  {
+   for(j=0;j<12;j++)
+   {
+    if(sudoku[i][j]==-1)
+     cout<<sudoku[i][j]<<" ";
+    else
+     cout<<" "<<sudoku[i][j]<<" ";
+   }
+   cout<<endl;
+  }
  } 
 
-
-
  
- 
-
  if(result==0)
  {
   cout<<result<<endl;
