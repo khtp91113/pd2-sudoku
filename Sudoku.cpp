@@ -205,63 +205,110 @@ int Sudoku::correct(int result)
   return result;
 }
 
-int Sudoku::Multiple(int possible[][9],int count,int m[],int n[],int result)
+int Sudoku::Multiple(int total[],int count,int m[],int n[])
 {
- int x[count],time=0;
- unsigned long long int temp=1,i,j,k,y=1;
+ int i,j;
+ int temp;
  for(i=0;i<count;i++)
-  x[i]=0;
- for(i=0;i<count;i++)
-  for(j=0;j<9&&possible[i][j]!=0;j++)
-   x[i]++;
- for(i=0;i<count;i++)//////////////y被玩報了...
-  y*=x[i];
- int total[count],echelon[count];
- for(i=0;i<count-1;i++)///////////echelon也被玩爆了...
- {
-  for(j=count-1;j>i;j--)
-   temp*=x[j];
-  echelon[i]=temp;
-  temp=1;
- }
- echelon[count-1]=x[count-1];
- int temp1,temp2;
- for(i=0;i<y;i++)
- {
-  temp=i;
-  for(j=0;j<count-1;j++)
-  {
-   total[j]=temp/echelon[j];
-   temp-=total[j]*echelon[j];
-  }
-  total[count-1]=temp;
-  for(j=0;j<count;j++)
-   sudoku[m[j]][n[j]]=possible[j][total[j]];
-  temp2=correct(result);
-  if(temp2==-1&&time==1)
-   return 2;
-  if(temp2==-1)
-  {
-   time=1;
-   temp1=y;
-  }
- }
- if(time==1)
- {
-  temp=temp1;
-  for(j=0;j<count-1;j++)
-  {
-   total[j]=temp/echelon[j];
-   temp-=total[j]*echelon[j];
-  }
-  total[count-1]=temp;
-  for(j=0;j<count;j++)
-   sudoku[m[j]][n[j]]=possible[j][total[j]];
-  return 1;
- }
- if(time==0)
+  sudoku[m[i]][n[i]]=total[i];
+ temp=correct(-1);
+ if(temp==0)
   return 0;
+ if(temp==-1)
+ {
+  for(i=0;i<12;i++)
+   for(j=0;j<12;j++)
+    tem[i][j]=sudoku[i][j];
+  cout<<endl;///////////////////////////
+  for(i=0;i<12;i++)/////////////////////
+  {
+   for(j=0;j<12;j++)
+   {
+    if(tem[i][j]==-1)
+     cout<<tem[i][j]<<" ";
+    else
+     cout<<" "<<tem[i][j]<<" ";
+   }
+   cout<<endl;
+  }/////////////////////////////////
+  return-2;
+ }
 }
+
+
+
+
+void Sudoku::Backtracking(int num,int x[],int t[],int m[],int n[],int count,int possible[][9])
+{
+ int no=0,i,j;
+ for(i=0;i<12;i++)
+  for(j=0;j<12;j++)
+   if(sudoku[i][j]==0)
+    no=1;
+ if(no==0&&multi==1)
+ {
+  cout<<endl;
+  for(i=0;i<12;i++)
+  {
+   for(j=0;j<12;j++)
+   {
+    if(sudoku[i][j]==-1)
+     cout<<sudoku[i][j]<<" ";
+    else
+     cout<<" "<<sudoku[i][j]<<" ";
+   }
+   cout<<endl;
+  }
+  cout<<2<<endl;
+  exit(0);
+ }
+
+ if(no==0)
+ {
+  cout<<endl;
+  for(i=0;i<12;i++)
+  {
+   for(j=0;j<12;j++)
+   {
+    if(sudoku[i][j]==-1)
+     cout<<sudoku[i][j]<<" ";
+    else
+     cout<<" "<<sudoku[i][j]<<" ";
+   }
+   cout<<endl;
+  }
+  multi=1;
+  return;
+ }
+ for(;t[num]<x[num];t[num]++)
+ {
+  sudoku[m[num]][n[num]]=possible[num][t[num]];
+  if(correct(-1)==-1)
+   Backtracking(num+1,x,t,m,n,count,possible);
+  sudoku[m[num]][n[num]]=0;
+  for(i=num+1;i<count;i++)
+   t[i]=0;
+ }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void Sudoku::Solve()
 {
@@ -287,6 +334,11 @@ void Sudoku::Solve()
   result=0;
  else;
  result=correct(result);
+ if(result==0)
+ {
+  cout<<result<<endl;
+  return;
+ }
  int count=0;
  for(i=0;i<12;i++)
   for(j=0;j<12;j++)
@@ -524,10 +576,6 @@ void Sudoku::Solve()
  for(k=0;k<9;k++)
   check[k]=0;
 
-
-
-
-
  //檢查還有沒有空格
  int clear=1;
  for(i=0;i<12;i++)
@@ -560,16 +608,6 @@ void Sudoku::Solve()
   }
  }
 
-
-
-
-
-
-
-
- 
- 
- //多空格 暴力解
  int possible[count][9],count1=0,count2=0,note=0,jump=0;
  for(k=0;k<9;k++)
   check[k]=0;
@@ -684,6 +722,36 @@ void Sudoku::Solve()
    } 
   }
  }
+cout<<endl;
+ for(i=0;i<12;i++)/////////////////////////////////////////////////////
+ {
+  for(j=0;j<12;j++)
+  {
+   if(sudoku[i][j]==-1)
+    cout<<sudoku[i][j]<<" ";
+   else
+    cout<<" "<<sudoku[i][j]<<" ";
+  }
+  cout<<endl;
+ } 
+/*for(i=0;i<count;i++)///////////////////////////////////////
+{for(j=0;j<9;j++)
+cout<<possible[i][j]<<" ";
+cout<<endl;}*/
+ int impossible=0;
+ for(i=0;i<count;i++)
+ {
+  for(j=0;j<9;j++)
+   if(possible[i][j]==0)
+    impossible++;
+  if(impossible==9)
+  {
+   cout<<0<<endl;
+   return;
+  }
+  impossible=0;
+ }
+
  //檢查還有沒有空格
  clear=1;
  for(i=0;i<12;i++)
@@ -720,6 +788,7 @@ void Sudoku::Solve()
  for(i=0;i<12;i++)
   for(j=0;j<12;j++)
   {
+
    if(position[i][j]==1)
    {
     m[k]=i;
@@ -727,41 +796,63 @@ void Sudoku::Solve()
     k++;
    }
   }
+ int x[count],t[count],ch=possible[0][0],total1[count],q,temp,multi=0;
+ for(i=0;i<count;i++)
+  t[i]=0;
+ for(i=0;i<count;i++)
+  total1[i]=0;
+ for(i=0;i<count;i++)
+  x[i]=0;
+ for(i=0;i<count;i++)
+  for(j=0;j<9&&possible[i][j]!=0;j++)
+   x[i]++;
+ for(i=0;i<count;i++)
+  total1[i]=possible[i][t[i]];
 
 
-
-
-
- result=Multiple(possible,count1,m,n,result);
-     
-
- if(result==2)
+/* while(1)
  {
-  cout<<result<<endl;
-  return;
- }
+  q=Multiple(total1,count,m,n);
+  if(q==-2&&multi==1)
+  {
+   result=2;
+   break;
+  }
+  if(q==-2)
+   multi=1;
+  t[count-1]++;
+  for(i=count-1;i>=1;i--)
+   if(t[i]>=x[i])
+   {
+    t[i-1]++;
+    t[i]=0;
+   }
+  for(i=0;i<count;i++)
+   total1[i]=possible[i][t[i]];
+ }*/
+ multi=0;
+ Backtracking(0,x,t,m,n,count,possible);
+ 
 
-
- if(result==1)
+ if(multi==1)
  {
-  cout<<result<<endl;
+  cout<<1<<endl;
   for(i=0;i<12;i++)
   {
    for(j=0;j<12;j++)
    {
-    if(sudoku[i][j]==-1)
-     cout<<sudoku[i][j]<<" ";
+    if(tem[i][j]==-1)
+     cout<<tem[i][j]<<" ";
     else
-     cout<<" "<<sudoku[i][j]<<" ";
+     cout<<" "<<tem[i][j]<<" ";
    }
    cout<<endl;
   }
  } 
 
- 
- if(result==0)
+ if(multi==0)
  {
-  cout<<result<<endl;
+  cout<<0<<endl;
   return;
  } 
 }
