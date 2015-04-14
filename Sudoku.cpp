@@ -1,24 +1,26 @@
 #include"Sudoku.h"
 #include<cstdlib>
+#include<ctime>
 using namespace std;
 
 void Sudoku::GiveQuestion()
 {
  int select,origin[12][12],i,j;
  srand(time(NULL));
- select=rand()%3;
- int origin_1[12][12]={{-1,-1,-1, 1, 9, 8, 5, 2, 4, 7, 6, 3},
-                       {-1,-1,-1, 6, 2, 4, 3, 9, 7, 8, 5, 1},
-                       {-1,-1,-1, 5, 7, 3, 1, 6, 8, 4, 9, 2},
-                       { 5, 6, 8, 2, 4, 1,-1,-1,-1, 9, 3, 7},
-                       { 2, 4, 7, 9, 3, 5,-1,-1,-1, 1, 8, 6},
-                       { 1, 3, 9, 8, 6, 7,-1,-1,-1, 5, 2, 4},
-                       { 8, 1, 6,-1,-1,-1, 2, 7, 5, 3, 4, 9},
-                       { 3, 9, 5,-1,-1,-1, 4, 1, 6, 2, 7, 8},
-                       { 7, 2, 4,-1,-1,-1, 8, 3, 9, 6, 1, 5},
-                       { 9, 7, 3, 4, 8, 2, 6, 5, 1,-1,-1,-1},
-                       { 6, 8, 1, 3, 5, 9, 7, 4, 2,-1,-1,-1},
-                       { 4, 5, 2, 7, 1, 6, 9, 8, 3,-1,-1,-1}};
+ //select=rand()%3;
+ select=1;
+ int origin_1[12][12]={{-1,-1,-1, 0, 0, 8, 0, 0, 0, 0, 0, 0},
+                       {-1,-1,-1, 0, 0, 4, 0, 9, 0, 0, 0, 1},
+                       {-1,-1,-1, 0, 0, 0, 1, 0, 8, 0, 0, 0},
+                       { 0, 6, 0, 2, 0, 0,-1,-1,-1, 9, 0, 7},
+                       { 0, 0, 0, 0, 3, 0,-1,-1,-1, 0, 0, 0},
+                       { 0, 3, 0, 0, 0, 7,-1,-1,-1, 5, 2, 0},
+                       { 0, 0, 6,-1,-1,-1, 0, 7, 0, 0, 4, 0},
+                       { 0, 9, 0,-1,-1,-1, 0, 0, 0, 2, 0, 8},
+                       { 0, 0, 4,-1,-1,-1, 0, 0, 9, 0, 1, 0},
+                       { 0, 0, 0, 0, 0, 2, 0, 5, 0,-1,-1,-1},
+                       { 0, 8, 1, 3, 0, 9, 0, 4, 2,-1,-1,-1},
+                       { 0, 5, 0, 7, 1, 0, 0, 0, 0,-1,-1,-1}};
  int origin_2[12][12]={{ 5, 1, 3, 2, 6, 4,-1,-1,-1, 7, 9, 8},
                        { 7, 6, 4, 8, 1, 9,-1,-1,-1, 2, 3, 5},
                        { 2, 9, 8, 7, 3, 5,-1,-1,-1, 1, 4, 6},
@@ -109,6 +111,7 @@ void Sudoku::GiveQuestion()
          break;
   default:break;
  }
+ 
  for(i=0;i<12;i++)
  {
   for(j=0;j<12;j++)
@@ -128,18 +131,8 @@ void Sudoku::ReadIn()
  for(i=0;i<12;i++)
   for(j=0;j<12;j++)
    cin>>sudoku[i][j];
- for(i=0;i<12;i++)
- {
-  for(j=0;j<12;j++)
-  {
-   if(sudoku[i][j]==-1)
-    cout<<sudoku[i][j]<<" ";
-   else
-    cout<<" "<<sudoku[i][j]<<" ";
-  }
-  cout<<endl;
- } 
 }
+
 int Sudoku::correct(int result)
 {
  int i,j,k,check[9]={0};
@@ -205,39 +198,6 @@ int Sudoku::correct(int result)
   return result;
 }
 
-int Sudoku::Multiple(int total[],int count,int m[],int n[])
-{
- int i,j;
- int temp;
- for(i=0;i<count;i++)
-  sudoku[m[i]][n[i]]=total[i];
- temp=correct(-1);
- if(temp==0)
-  return 0;
- if(temp==-1)
- {
-  for(i=0;i<12;i++)
-   for(j=0;j<12;j++)
-    tem[i][j]=sudoku[i][j];
-  cout<<endl;///////////////////////////
-  for(i=0;i<12;i++)/////////////////////
-  {
-   for(j=0;j<12;j++)
-   {
-    if(tem[i][j]==-1)
-     cout<<tem[i][j]<<" ";
-    else
-     cout<<" "<<tem[i][j]<<" ";
-   }
-   cout<<endl;
-  }/////////////////////////////////
-  return-2;
- }
-}
-
-
-
-
 void Sudoku::Backtracking(int num,int x[],int t[],int m[],int n[],int count,int possible[][9])
 {
  int no=0,i,j;
@@ -247,36 +207,12 @@ void Sudoku::Backtracking(int num,int x[],int t[],int m[],int n[],int count,int 
     no=1;
  if(no==0&&multi==1)
  {
-  cout<<endl;
-  for(i=0;i<12;i++)
-  {
-   for(j=0;j<12;j++)
-   {
-    if(sudoku[i][j]==-1)
-     cout<<sudoku[i][j]<<" ";
-    else
-     cout<<" "<<sudoku[i][j]<<" ";
-   }
-   cout<<endl;
-  }
   cout<<2<<endl;
   exit(0);
  }
 
  if(no==0)
  {
-  cout<<endl;
-  for(i=0;i<12;i++)
-  {
-   for(j=0;j<12;j++)
-   {
-    if(sudoku[i][j]==-1)
-     cout<<sudoku[i][j]<<" ";
-    else
-     cout<<" "<<sudoku[i][j]<<" ";
-   }
-   cout<<endl;
-  }
   multi=1;
   return;
  }
@@ -290,25 +226,6 @@ void Sudoku::Backtracking(int num,int x[],int t[],int m[],int n[],int count,int 
    t[i]=0;
  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void Sudoku::Solve()
 {
@@ -722,22 +639,6 @@ void Sudoku::Solve()
    } 
   }
  }
-cout<<endl;
- for(i=0;i<12;i++)/////////////////////////////////////////////////////
- {
-  for(j=0;j<12;j++)
-  {
-   if(sudoku[i][j]==-1)
-    cout<<sudoku[i][j]<<" ";
-   else
-    cout<<" "<<sudoku[i][j]<<" ";
-  }
-  cout<<endl;
- } 
-/*for(i=0;i<count;i++)///////////////////////////////////////
-{for(j=0;j<9;j++)
-cout<<possible[i][j]<<" ";
-cout<<endl;}*/
  int impossible=0;
  for(i=0;i<count;i++)
  {
@@ -809,31 +710,9 @@ cout<<endl;}*/
  for(i=0;i<count;i++)
   total1[i]=possible[i][t[i]];
 
-
-/* while(1)
- {
-  q=Multiple(total1,count,m,n);
-  if(q==-2&&multi==1)
-  {
-   result=2;
-   break;
-  }
-  if(q==-2)
-   multi=1;
-  t[count-1]++;
-  for(i=count-1;i>=1;i--)
-   if(t[i]>=x[i])
-   {
-    t[i-1]++;
-    t[i]=0;
-   }
-  for(i=0;i<count;i++)
-   total1[i]=possible[i][t[i]];
- }*/
  multi=0;
  Backtracking(0,x,t,m,n,count,possible);
  
-
  if(multi==1)
  {
   cout<<1<<endl;
@@ -841,14 +720,15 @@ cout<<endl;}*/
   {
    for(j=0;j<12;j++)
    {
-    if(tem[i][j]==-1)
-     cout<<tem[i][j]<<" ";
+    if(sudoku[i][j]==-1)
+     cout<<sudoku[i][j]<<" ";
     else
-     cout<<" "<<tem[i][j]<<" ";
+     cout<<" "<<sudoku[i][j]<<" ";
    }
    cout<<endl;
   }
- } 
+  return;
+ }
 
  if(multi==0)
  {
