@@ -1,0 +1,7 @@
+編譯 用Makefile 
+  指令列打make就好了
+執行
+  出題
+    指令列打./give_question
+  解題
+    指令列打./solve
