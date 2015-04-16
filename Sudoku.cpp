@@ -700,17 +700,6 @@ void Sudoku::Solve()
  if(multi[0]==0)//multi為零 代表無解 結束程式
  {
   cout<<0<<endl;
-  for(i=0;i<12;i++)
-  {
-   for(j=0;j<12;j++)
-   {
-    if(sudoku[i][j]==-1)
-     cout<<sudoku[i][j]<<" ";
-    else
-     cout<<" "<<sudoku[i][j]<<" ";
-   }
-   cout<<endl;
-  }
   return;
  } 
  return;
