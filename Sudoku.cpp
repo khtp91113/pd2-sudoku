@@ -132,79 +132,6 @@ void Sudoku::ReadIn()
    cin>>sudoku[i][j];
 }
 
-int Sudoku::correct_simple(int result,int r,int c)//用在backtracking 只檢查填空那個的行列和九宮格 而不要整個數獨都檢查
-{
- int check[9]={0},i,j;
- for(i=r,j=0;j<12;j++)
-  if(sudoku[i][j]!=-1&&sudoku[i][j]!=0)
-   check[sudoku[i][j]-1]++;
- for(i=0;i<9;i++)
-  if(check[i]>1)
-   return 0;
- for(i=0;i<9;i++)
-  check[i]=0;
- for(j=c,i=0;i<12;i++)
-  if(sudoku[i][j]!=-1&&sudoku[i][j]!=0)
-   check[sudoku[i][j]-1]++;
- for(i=0;i<9;i++)
-  if(check[i]>1)
-   return 0;
- for(i=0;i<9;i++)
-  check[i]=0;
- switch((r%3)*10+(j%3))
- {
-  case 0:for(i=r;i<r+3;i++)
-          for(j=c;j<c+3;j++)
-           if(sudoku[i][j]!=0)
-            check[sudoku[i][j]-1]++;
-         break;
-  case 1:for(i=r;i<r+3;i++)
-          for(j=c-1;j<c+2;j++)
-           if(sudoku[i][j]!=0)
-            check[sudoku[i][j]-1]++;
-         break;
-  case 2:for(i=r;i<r+3;i++)
-          for(j=c-2;j<c+1;j++)
-           if(sudoku[i][j]!=0)
-            check[sudoku[i][j]-1]++;
-         break;
-  case 10:for(i=r-1;i<r+2;i++)
-           for(j=c;j<c+3;j++)
-            if(sudoku[i][j]!=0)
-             check[sudoku[i][j]-1]++;
-          break;
-  case 11:for(i=r-1;i<r+2;i++)
-           for(j=c-1;j<c+2;j++)
-            if(sudoku[i][j]!=0)
-             check[sudoku[i][j]-1]++;
-          break;
-  case 12:for(i=r-1;i<r+2;i++)
-           for(j=c-2;j<c+1;j++)
-            if(sudoku[i][j]!=0)
-             check[sudoku[i][j]-1]++;
-          break;
-  case 20:for(i=r-2;i<r+1;i++)
-           for(j=c;j<c+3;j++)
-            if(sudoku[i][j]!=0)
-             check[sudoku[i][j]-1]++;
-          break;
-  case 21:for(i=r-2;i<r+1;i++)
-           for(j=c-1;j<c+2;j++)
-            if(sudoku[i][j]!=0)
-             check[sudoku[i][j]-1]++;
-          break;
-  default:for(i=r-2;i<r+1;i++)
-           for(j=c-2;j<c+1;j++)
-            if(sudoku[i][j]!=0)
-             check[sudoku[i][j]-1]++;
-          break;
- }
- for(i=0;i<9;i++)
-  if(check[i]>1)
-   return 0;
- return result;
-}
-
 int Sudoku::correct(int result)
 {
  int i,j,k,check[9]={0};//檢查每一行或列和九宮格中除了0和-1外 有沒有重複的數字
@@ -292,12 +219,87 @@ void Sudoku::Backtracking(int num,int x[],int t[],int m[],int n[],int count,int 
   return;
  }
 
-
+ int check=0;
  for(;t[num]<x[num];t[num]++)//recursion 如果填進去的數字符合規則 就在填下一格 不對就return回上一層
  {
+  for(i=m[num],j=0;j<12;j++)
+   if(possible[num][t[num]]==sudoku[i][j])
+   {
+    check=1;
+    break;
+   }
+  if(check==1)
+  {
+   check=0;
+   continue;
+  }
+  for(j=n[num],i=0;i<12;i++)
+   if(possible[num][t[num]]==sudoku[i][j])
+   {
+    check=1;
+    break;
+   }
+  if(check==1)
+  {
+   check=0;
+   continue;
+  }
+  int r=m[num],c=n[num];
+  switch((r%3)*10+(c%3))
+  {
+   case 0:for(i=r;i<r+3;i++)
+           for(j=c;j<c+3;j++)
+            if(possible[num][t[num]]==sudoku[i][j])
+             check=1;
+          break;
+   case 1:for(i=r;i<r+3;i++)
+           for(j=c-1;j<c+2;j++)
+            if(possible[num][t[num]]==sudoku[i][j])
+             check=1;
+          break;
+   case 2:for(i=r;i<r+3;i++)
+           for(j=c-2;j<c+1;j++)
+            if(possible[num][t[num]]==sudoku[i][j])
+             check=1;
+          break;
+   case 10:for(i=r-1;i<r+2;i++)
+            for(j=c;j<c+3;j++)
+             if(possible[num][t[num]]==sudoku[i][j])
+              check=1;
+           break;
+   case 11:for(i=r-1;i<r+2;i++)
+            for(j=c-1;j<c+2;j++)
+             if(possible[num][t[num]]==sudoku[i][j])
+              check=1;
+           break;
+   case 12:for(i=r-1;i<r+2;i++)
+            for(j=c-2;j<c+1;j++)
+             if(possible[num][t[num]]==sudoku[i][j])
+              check=1;
+           break;
+   case 20:for(i=r-2;i<r+1;i++)
+            for(j=c;j<c+3;j++)
+             if(possible[num][t[num]]==sudoku[i][j])
+              check=1;
+           break;
+   case 21:for(i=r-2;i<r+1;i++)
+            for(j=c-1;j<c+2;j++)
+             if(possible[num][t[num]]==sudoku[i][j])
+              check=1;
+           break;
+   default:for(i=r-2;i<r+1;i++)
+            for(j=c-2;j<c+1;j++)
+             if(possible[num][t[num]]==sudoku[i][j])
+              check=1;
+           break;
+  }
+  if(check==1)
+  {
+   check=0;
+   continue;
+  }
   sudoku[m[num]][n[num]]=possible[num][t[num]];
-  if(correct_simple(-1,m[num],n[num])==-1)
-   Backtracking(num+1,x,t,m,n,count,possible);
+  Backtracking(num+1,x,t,m,n,count,possible);
   sudoku[m[num]][n[num]]=0;
   for(i=num+1;i<count;i++)
    t[i]=0;

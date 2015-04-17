@@ -4,7 +4,6 @@ class Sudoku
  public:
    void GiveQuestion();//出題
    int correct(int result);//檢查有沒有符合規則
-   int correct_simple(int result,int r,int c);//檢查有沒有符合規則簡易版
    void ReadIn();//讀題
    void Solve();//解題
    void Backtracking(int num,int x[],int t[],int m[],int n[],int count,int possible[][9]);//暴力解題
